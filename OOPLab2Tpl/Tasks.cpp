@@ -15,6 +15,24 @@ void MenuTask()
 void task1() {
     // Обчислення виразів з використанням побітових операцій
     // Calculation of expressions using bitwise operations 
+    #include <iostream>
+#include <clocale>
+using namespace std;
+int main()
+{
+    int a, b, x, d, c, y;
+    cout << "Input a: ";
+    cin >> a;
+    cout << "Input b: ";
+    cin >> b;
+    cout << "Input c: ";
+    cin >> c;
+    cout << "Input d: ";
+    cin >> d;
+    x = (((a << 4) + a + (c << 8) + (c << 6) - (c << 3)) >> 5) - ((b << 7) - (b << 3)) + (d << 7) - d;
+    y = ((17 * a + 312 * c) / 32) - b * 120 + d * 127;
+    cout << x << "\n" << y;
+}
     cout << " Calculation of expressions using bitwise operations  \n";
 }
 
