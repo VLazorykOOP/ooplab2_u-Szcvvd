@@ -41,7 +41,151 @@ void task2()
     // Шифрування даних з використання побітових операцій 
     // Data encryption using bitwise operations
     cout << " Data encryption using bitwise operations  \n";
+#include <iostream>
+#include <fstream>
+#include <clocale>
+#include <string.h>
+using namespace std;
 
+void binaryView(char a) {
+	int b[8];
+
+	memset(b, 0, sizeof(b));
+
+	b[0] = a & 0b10000000 ? 1 : 0;
+	b[1] = a & 0b01000000 ? 1 : 0;
+	b[2] = a & 0b00100000 ? 1 : 0;
+	b[3] = a & 0b00010000 ? 1 : 0;
+	b[4] = a & 0b00001000 ? 1 : 0;
+	b[5] = a & 0b00000100 ? 1 : 0;
+	b[6] = a & 0b00000010 ? 1 : 0;
+	b[7] = a & 0b00000001 ? 1 : 0;
+
+	for (int i = 0; i < 8; i++) {
+		cout << b[i];
+	}
+	cout << "\n";
+}
+
+void ReadArrayTextFile(int sizeMax, unsigned char* pA) {
+
+	int size = 64;
+	ifstream fin;
+	fin.open("C:\\Users\\Саша\\Desktop\\file1.txt");
+	if (fin.fail()) return;
+	if (size <= 0) return;
+
+	for (int i = 0; i < size; i++)
+	{
+		fin >> pA[i];
+		cout << i + 1 << ") Element arrays:" << pA[i] << "\n";
+	}
+	fin.close();
+
+	return;
+}
+
+void WriteArrayTextFile1(int size, unsigned char* pA) {
+
+	ofstream fout("C:\\Users\\Саша\\Desktop\\file2.bin");
+	if (!fout) cout << "Erorr";
+
+	else {
+		for (int i = 0; i < size; i++) {
+			fout << pA[i];
+		}
+	}
+
+	fout.close();
+
+	return;
+}
+
+void encryptArray(unsigned char* text, unsigned char* destination) {
+	for (unsigned char i = 0; i < 8; i++) {
+		for (unsigned char j = 0; j < 16; j += 2) {
+			destination[(i << 4) + j] = (i << 5) | (j << 1) | ((i << 5) & 0b01000000 ? 0b00000010 : 0) | (text[(i << 3) + (j >> 1)] >> 7);
+			destination[(i << 4) + j + 1] = (text[(i << 3) + (j >> 1)] << 1) | ((text[(i << 3) + (j >> 1)] << 1) & 0b00000010 ? 1 : 0);
+		}  //00110001
+	}
+}
+
+void decryptArray(unsigned char* text, unsigned char* destination) {
+	unsigned char row;
+	unsigned char collum;
+	for (unsigned char i = 0; i < 8; i++) {
+		for (unsigned char j = 0; j < 16; j += 2) {
+			row = (text[(i << 4) + j] >> 5) & 0b00000111;
+			collum = (text[(i << 4) + j] >> 2) & 0b00000111;
+			destination[(row << 3) + collum] = ((text[(i << 4) + j] << 7) & 0b10000000) | (text[(i << 4) + j + 1] >> 1);
+		}
+	}
+}
+
+struct optio3 {
+	unsigned char row : 3;
+	unsigned char collum : 3;
+	unsigned char pairing0_1 : 1;
+	unsigned char half1 : 1;
+	unsigned char half2 : 7;
+	unsigned char pairing14 : 1;
+};
+
+void Print_text(unsigned char* text, unsigned char* encryptedText, unsigned char* decrypted) {
+
+	for (int i = 0; i < 64; i++) {  // basic
+		cout << text[i];
+	}
+	cout << "\n\n";
+	for (int i = 0; i < 128; i++) { // encrypted
+		binaryView(encryptedText[i]);
+		if ((i % 2) != 0)
+			cout << "\n";
+		if (i == 63) cout << '\n';
+	}
+	cout << "\n\n";
+	for (int i = 0; i < 64; i++) {  // decrypted
+		cout << decrypted[i];
+	}
+	cout << "\n\n";
+	return;
+}
+
+void encrypt() {
+
+	unsigned char text[65];
+	unsigned char encrypted[128];
+	unsigned char decrypted[64];
+	unsigned char* encryptedText = encrypted;
+
+	ReadArrayTextFile(64, text);
+	WriteArrayTextFile1(64, text);
+
+	encryptArray(text, encryptedText);
+	decryptArray(encryptedText, decrypted);
+
+	Print_text(text, encryptedText, decrypted);
+
+
+}
+
+void decrypt() {
+	optio3 enc[64];
+	unsigned char* encryptedText = (unsigned char*)enc;
+
+	unsigned char text[65];
+	unsigned char encrypted[128];
+	unsigned char decrypted[64];
+
+	ReadArrayTextFile(64, text);
+	WriteArrayTextFile1(64, text);
+
+	encryptArray(text, encryptedText);
+	decryptArray(encryptedText, decrypted);
+
+	Print_text(text, encryptedText, decrypted);
+
+}
 }
 
 void task3()
@@ -49,6 +193,151 @@ void task3()
     // Шифрування даних з використання стуктур з бітовими полями 
     // Data encryption using structures with bit fields
     cout << "  Data encryption using structures with bit fields \n";
+	#include <iostream>
+#include <fstream>
+#include <clocale>
+#include <string.h>
+using namespace std;
+
+void binaryView(char a) {
+	int b[8];
+
+	memset(b, 0, sizeof(b));
+
+	b[0] = a & 0b10000000 ? 1 : 0;
+	b[1] = a & 0b01000000 ? 1 : 0;
+	b[2] = a & 0b00100000 ? 1 : 0;
+	b[3] = a & 0b00010000 ? 1 : 0;
+	b[4] = a & 0b00001000 ? 1 : 0;
+	b[5] = a & 0b00000100 ? 1 : 0;
+	b[6] = a & 0b00000010 ? 1 : 0;
+	b[7] = a & 0b00000001 ? 1 : 0;
+
+	for (int i = 0; i < 8; i++) {
+		cout << b[i];
+	}
+	cout << "\n";
+}
+
+void ReadArrayTextFile(int sizeMax, unsigned char* pA) {
+
+	int size = 64;
+	ifstream fin;
+	fin.open("C:\\Users\\Саша\\Desktop\\file1.txt");
+	if (fin.fail()) return;
+	if (size <= 0) return;
+
+	for (int i = 0; i < size; i++)
+	{
+		fin >> pA[i];
+		cout << i + 1 << ") Element arrays:" << pA[i] << "\n";
+	}
+	fin.close();
+
+	return;
+}
+
+void WriteArrayTextFile1(int size, unsigned char* pA) {
+
+	ofstream fout("C:\\Users\\Саша\\Desktop\\file2.bin");
+	if (!fout) cout << "Erorr";
+
+	else {
+		for (int i = 0; i < size; i++) {
+			fout << pA[i];
+		}
+	}
+
+	fout.close();
+
+	return;
+}
+
+void encryptArray(unsigned char* text, unsigned char* destination) {
+	for (unsigned char i = 0; i < 8; i++) {
+		for (unsigned char j = 0; j < 16; j += 2) {
+			destination[(i << 4) + j] = (i << 5) | (j << 1) | ((i << 5) & 0b01000000 ? 0b00000010 : 0) | (text[(i << 3) + (j >> 1)] >> 7);
+			destination[(i << 4) + j + 1] = (text[(i << 3) + (j >> 1)] << 1) | ((text[(i << 3) + (j >> 1)] << 1) & 0b00000010 ? 1 : 0);
+		}  //00110001
+	}
+}
+
+void decryptArray(unsigned char* text, unsigned char* destination) {
+	unsigned char row;
+	unsigned char collum;
+	for (unsigned char i = 0; i < 8; i++) {
+		for (unsigned char j = 0; j < 16; j += 2) {
+			row = (text[(i << 4) + j] >> 5) & 0b00000111;
+			collum = (text[(i << 4) + j] >> 2) & 0b00000111;
+			destination[(row << 3) + collum] = ((text[(i << 4) + j] << 7) & 0b10000000) | (text[(i << 4) + j + 1] >> 1);
+		}
+	}
+}
+
+struct optio3 {
+	unsigned char row : 3;
+	unsigned char collum : 3;
+	unsigned char pairing0_1 : 1;
+	unsigned char half1 : 1;
+	unsigned char half2 : 7;
+	unsigned char pairing14 : 1;
+};
+
+void Print_text(unsigned char* text, unsigned char* encryptedText, unsigned char* decrypted) {
+
+	for (int i = 0; i < 64; i++) {  // basic
+		cout << text[i];
+	}
+	cout << "\n\n";
+	for (int i = 0; i < 128; i++) { // encrypted
+		binaryView(encryptedText[i]);
+		if ((i % 2) != 0)
+			cout << "\n";
+		if (i == 63) cout << '\n';
+	}
+	cout << "\n\n";
+	for (int i = 0; i < 64; i++) {  // decrypted
+		cout << decrypted[i];
+	}
+	cout << "\n\n";
+	return;
+}
+
+void encrypt() {
+
+	unsigned char text[65];
+	unsigned char encrypted[128];
+	unsigned char decrypted[64];
+	unsigned char* encryptedText = encrypted;
+
+	ReadArrayTextFile(64, text);
+	WriteArrayTextFile1(64, text);
+
+	encryptArray(text, encryptedText);
+	decryptArray(encryptedText, decrypted);
+
+	Print_text(text, encryptedText, decrypted);
+
+
+}
+
+void decrypt() {
+	optio3 enc[64];
+	unsigned char* encryptedText = (unsigned char*)enc;
+
+	unsigned char text[65];
+	unsigned char encrypted[128];
+	unsigned char decrypted[64];
+
+	ReadArrayTextFile(64, text);
+	WriteArrayTextFile1(64, text);
+
+	encryptArray(text, encryptedText);
+	decryptArray(encryptedText, decrypted);
+
+	Print_text(text, encryptedText, decrypted);
+
+}
 }
 
 
